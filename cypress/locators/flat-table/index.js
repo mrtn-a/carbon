@@ -1,3 +1,4 @@
+import { getDataElementByValue } from "..";
 import {
   FLAT_TABLE_COMPONENT,
   FLAT_TABLE_CELL,
@@ -31,4 +32,4 @@ export const flatTablePageSizeSelect = () =>
   cy.get(FLAT_TABLE_PAGE_SIZE_SELECT);
 export const flatTablePageSelectListPosition = () =>
   cy.get(FLAT_TABLE_PAGE_SELECT_LIST).parent();
-export const pageSelectDataComponent = () => cy.get(PAGE_SELECT);
+export const pageSelectDataComponent = () => getDataElementByValue(PAGE_SELECT);

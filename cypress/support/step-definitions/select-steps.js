@@ -1,15 +1,12 @@
 import {
-  simpleSelectID,
   selectOption,
   dropdownButton,
   selectList,
   simpleSelect,
   selectDataComponent,
   multiSelectDataComponent,
-  openOnFocusID,
   multiSelectPill,
   multiSelectPillByPosition,
-  isLoading,
   selectListText,
   multiColumnsSelectListHeader,
   multiColumnsSelectListBody,
@@ -24,22 +21,6 @@ import {
 } from "../../locators";
 import { dataComponentButtonByText } from "../../locators/pages";
 import { loader } from "../../locators/loader";
-
-When("I focus select input", () => {
-  simpleSelectID().focus();
-});
-
-When("I focus default Select input", () => {
-  simpleSelect().focus();
-});
-
-When("I focus openOnFocus Select input", () => {
-  openOnFocusID().focus();
-});
-
-When("I click openOnFocus Select input", () => {
-  openOnFocusID().click({ force: true });
-});
 
 Then("{string} Select list is opened", (name) => {
   selectDataComponent(name).should("have.attr", "aria-expanded", "true");
@@ -62,10 +43,6 @@ Then("multi Select list is closed", () => {
 });
 
 When("I click on Select input", () => {
-  simpleSelectID().click();
-});
-
-When("I click on default Select input", () => {
   simpleSelect().click();
 });
 
@@ -84,7 +61,7 @@ When("{string} option on the list is highlighted", (position) => {
 });
 
 When("I click onto controlled select using {string} key", (key) => {
-  simpleSelectID().trigger("keydown", keyCode(key));
+  simpleSelect().trigger("keydown", keyCode(key));
 });
 
 When("I click onto default select using {string} key", (key) => {
@@ -112,17 +89,17 @@ When("I click on dropdown button", () => {
 });
 
 When("I select value {string}", (text) => {
-  simpleSelectID().type(`${text}{enter}`);
+  selectListText(text).click();
 });
 
 When("I type {string} into input", (text) => {
-  simpleSelectID().type(text);
+  simpleSelect().type(text);
 });
 
 When(
   "Type {string} text into multi select input and select the value",
   (text) => {
-    simpleSelectID().type(`${text}{downarrow}{enter}`);
+    simpleSelect().type(`${text}{downarrow}{enter}`);
   }
 );
 
@@ -147,7 +124,7 @@ When("I click onto {string} button", (buttonName) => {
 });
 
 When("I click on Select input with lazy loading", () => {
-  isLoading().click();
+  simpleSelect().click();
 });
 
 Then("Lazy loading is visible", () => {

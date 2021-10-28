@@ -13,7 +13,7 @@ Feature: Filterable Select component
   @positive
   Scenario Outline: Filterable Select list is not open using keyboard <key>
     Given I open "Select filterable" component page "controlled"
-      And I focus select input
+      And I click on Select input
     When I click onto controlled select using "<key>" key
     Then "filterable" Select list is closed
     Examples:
@@ -24,7 +24,7 @@ Feature: Filterable Select component
   @positive
   Scenario: Filterable Select list is not open when has a focus
     Given I open "Select filterable" component page "controlled"
-    When I focus select input
+    When I click on Select input
     Then "filterable" Select list is closed
 
   @positive
@@ -98,13 +98,13 @@ Feature: Filterable Select component
   @positive
   Scenario: Select dropdown list is visible when click on it with openOnFocus attr is set to true
     Given I open "Select filterable" component page "open on focus"
-    When I click openOnFocus Select input
+    When I click on Select input
     Then "filterable" Select list is opened
 
   @positive
   Scenario: Select dropdown list is visible when focus on it with openOnFocus attr is set to true
     Given I open "Select filterable" component page "open on focus"
-    When I focus openOnFocus Select input
+    When I click on Select input
     Then "filterable" Select list is opened
 
   @positive
@@ -124,14 +124,14 @@ Feature: Filterable Select component
   @positive
   Scenario: Check the onChange events after typed string into the input
     Given I open "Select filterable" component page "default story"
-      And I focus default Select input
+      And I click on Select input
     When I type "A" into default input
     Then onChange action was called in Actions Tab
 
   @positive
   Scenario: Check the onClick, onFocus events after clicking on the input
     Given I open "Select filterable" component page "default story"
-    When I click on default Select input
+    When I click on Select input
     Then onFocus action was called in Actions Tab
       And onClick action was called in Actions Tab
 
@@ -147,7 +147,7 @@ Feature: Filterable Select component
   @positive
   Scenario: Check the onKeyDown event after clicking arrow
     Given I open "Select filterable" component page "default story"
-    When I focus default Select input
+    When I click on Select input
       And I click onto default select using "downarrow" key
       And I wait 500
     Then onOpen action was called in Actions Tab
@@ -157,7 +157,7 @@ Feature: Filterable Select component
   @positive
   Scenario: Check the onBlur event
     Given I open "Select filterable" component page "default story"
-      And I focus default Select input
+      And I click on Select input
     When I click on Select label
     Then onBlur action was called in Actions Tab
 
@@ -171,6 +171,6 @@ Feature: Filterable Select component
   @positive
   Scenario: Check the onFilterChange events after typed string into the input
     Given I open "Select filterable" component page "default story"
-      And I focus default Select input
+      And I click on Select input
     When I type "b" into default input
     Then onFilterChange action was called in Actions Tab

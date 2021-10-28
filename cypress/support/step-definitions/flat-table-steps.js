@@ -15,8 +15,9 @@ import {
 } from "../../locators/flat-table";
 
 import DEBUG_FLAG from "..";
-import { positionOfElement } from "../helper";
+import { keyCode, positionOfElement } from "../helper";
 import { icon } from "../../locators";
+import { selectOption, simpleSelect } from "../../locators/select";
 
 const gold = "rgb(255, 181, 0)";
 
@@ -274,9 +275,17 @@ Then("{int} row/rows is/are visible", (int) => {
 });
 
 Then("I type {int} in pagination input", (value) => {
-  pageSelectDataComponent().find("input").type(value);
+  pageSelectDataComponent().eq(1).type(value);
 });
 
 Then("Pagination input should have {int} value", (value) => {
-  pageSelectDataComponent().find("input").should("have.value", value);
+  pageSelectDataComponent().should("have.value", value);
+});
+
+When("I press downarrow onto pagination select list", () => {
+  simpleSelect().trigger("keydown", keyCode("downarrow"));
+});
+
+When("I click onto pagination select list option", () => {
+  selectOption(0).click();
 });

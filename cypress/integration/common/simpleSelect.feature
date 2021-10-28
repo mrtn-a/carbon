@@ -19,7 +19,7 @@ Feature: Select component
   @positive
   Scenario: Close Select list using Tab keyboard
     Given I open "Select" component page "controlled"
-      And I focus select input
+      And I click on Select input
     When I press Tab onto focused element
     Then "simple" Select list is closed
 
@@ -39,21 +39,9 @@ Feature: Select component
       And "simple" Select list is closed
 
   @positive
-  Scenario Outline: Choose <selectedValue> option from Select list by typing <selectableValue> value in input
-    Given I open "Select" component page "controlled"
-      And I click on Select input
-    When I type "<selectableValue>" into input
-    Then Select input has "<selectedValue>" value
-      And "<position>" option on the list is hovered over
-    Examples:
-      | selectableValue | selectedValue | position |
-      | Amb             | Amber         | first    |
-      | Bla             | Black         | second   |
-
-  @positive
   Scenario Outline: Open select list using arrow key
     Given I open "Select" component page "controlled"
-      And I focus select input
+      And I click on Select input
     When I click onto controlled select using "<key>" key
     Then "simple" Select list is opened
     Examples:
@@ -112,7 +100,7 @@ Feature: Select component
   Scenario Outline: Show Select list is at the <position> in <size> viewport
     Given I open default "Select Test" component with "simpleSelect" json from "commonComponents" using "<size>" object name
       And I have a <size> viewport
-    When I click on default Select input
+    When I click on Select input
     Then "simple" Select list is visible at the <position>
     Examples:
       | position | size  |
@@ -122,7 +110,7 @@ Feature: Select component
   @positive
   Scenario: Check the onOpen, onClick, onFocus after clicking on the input
     Given I open "Select" component page "default story"
-    When I click on default Select input
+    When I click on Select input
     Then onOpen action was called in Actions Tab
       And onFocus action was called in Actions Tab
       And onClick action was called in Actions Tab
@@ -130,14 +118,14 @@ Feature: Select component
   @positive
   Scenario: Check the onChange event by clicking mouse on the select list option
     Given I open "Select" component page "default story"
-      And I click on default Select input
+      And I click on Select input
     When I click on "first" option on Select list
     Then onChange action was called in Actions Tab
 
   @positive
-  Scenario: Check the onKeyDown event after clicking arrow
+  Scenario: Check the onKeyDown event after pressing the downarrow key
     Given I open "Select" component page "default story"
-      And I focus default Select input
+      And I click on Select input
     When I click onto default select using "downarrow" key
       And I wait 500
     Then onKeyDown action was called in Actions Tab
@@ -146,7 +134,7 @@ Feature: Select component
   @positive
   Scenario Outline: Check the onKeyDown event after press <key>
     Given I open "Select" component page "default story"
-      And I focus default Select input
+      And I click on Select input
     When I click onto default select using "<key>" key
       And I wait 500
     Then onOpen action was called in Actions Tab
@@ -160,13 +148,13 @@ Feature: Select component
   @positive
   Scenario: Check the onBlur event
     Given I open "Select" component page "default story"
-      And I focus default Select input
+      And I click on Select input
     When I click on Select label
     Then onBlur action was called in Actions Tab
 
   @positive
   Scenario: Close Select list using Esc keyboard
     Given I open "Select" component page "default story"
-      And I click on default Select input
+      And I click on Select input
     When I hit ESC key
     Then "simple" Select list is closed
