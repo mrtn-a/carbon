@@ -56,15 +56,15 @@ const StyledIcon = styled.span`
 
     try {
       if (disabled) {
-        finalColor = theme.icon.disabled;
-        finalHoverColor = theme.icon.disabled;
+        finalColor = "var(--colorsYin030)";
+        finalHoverColor = "var(--colorsYin030)";
       } else if (color) {
         const { color: renderedColor } = styledColor({ color, theme });
         finalColor = renderedColor;
         finalHoverColor = shade(0.2, renderedColor);
       } else {
-        finalColor = theme.icon.default;
-        finalHoverColor = theme.icon.defaultHover;
+        finalColor = "var(--colorsYin065)";
+        finalHoverColor = "var(--colorsYin090)";
       }
 
       if (bg) {
@@ -72,8 +72,8 @@ const StyledIcon = styled.span`
         bgColor = backgroundColor;
         bgHoverColor = shade(0.2, backgroundColor);
       } else if (disabled) {
-        bgColor = theme.icon.disabled;
-        bgHoverColor = theme.icon.disabled;
+        bgColor = "var(--colorsYin030)";
+        bgHoverColor = "var(--colorsYin030)";
       } else {
         bgColor = "transparent";
         bgHoverColor = "transparent";
