@@ -520,6 +520,7 @@ const FilterableSelect = React.forwardRef(
       <StyledSelect
         aria-expanded={isOpen}
         aria-haspopup="listbox"
+        aria-owns={id}
         ref={containerRef}
         hasTextCursor
         readOnly={readOnly}
@@ -527,6 +528,7 @@ const FilterableSelect = React.forwardRef(
         data-component={dataComponent}
         data-role={dataRole}
         data-element={dataElement}
+        role="combobox"
         {...filterStyledSystemMarginProps(textboxProps)}
       >
         <SelectTextbox
