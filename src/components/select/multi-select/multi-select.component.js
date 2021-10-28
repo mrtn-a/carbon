@@ -493,6 +493,7 @@ const MultiSelect = React.forwardRef(
       <StyledSelectMultiSelect
         aria-expanded={isOpen}
         aria-haspopup="listbox"
+        aria-owns={id}
         ref={containerRef}
         disabled={disabled}
         readOnly={readOnly}
@@ -501,6 +502,7 @@ const MultiSelect = React.forwardRef(
         data-component={dataComponent}
         data-role={dataRole}
         data-element={dataElement}
+        role="combobox"
         {...filterStyledSystemMarginProps(textboxProps)}
       >
         <SelectTextbox
