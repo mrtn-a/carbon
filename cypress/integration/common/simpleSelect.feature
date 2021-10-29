@@ -4,7 +4,7 @@ Feature: Select component
   @positive
   Scenario Outline: Open Select list using <key>
     Given I open "Select" component page "controlled"
-    When I click onto controlled select using "<key>" key
+    When I click onto default select using "<key>" key
     Then "simple" Select list is opened
     Examples:
       | key   |
@@ -20,7 +20,7 @@ Feature: Select component
   Scenario: Close Select list using Tab keyboard
     Given I open "Select" component page "controlled"
       And I click on Select input
-    When I press Tab onto focused element
+    When I press Tab onto select text element
     Then "simple" Select list is closed
 
   @positive
@@ -42,7 +42,7 @@ Feature: Select component
   Scenario Outline: Open select list using arrow key
     Given I open "Select" component page "controlled"
       And I click on Select input
-    When I click onto controlled select using "<key>" key
+    When I click onto default select using "<key>" key
     Then "simple" Select list is opened
     Examples:
       | key       | position | value  |

@@ -12,6 +12,7 @@ import {
   multiColumnsSelectListBody,
   boldedAndUnderlinedValue,
   selectListPosition,
+  selectText,
 } from "../../locators/select";
 import { positionOfElement, keyCode } from "../helper";
 import {
@@ -46,6 +47,14 @@ When("I click on Select input", () => {
   simpleSelect().click();
 });
 
+When("I click on controlled Select input", () => {
+  commonDataElementInputPreview().realClick();
+});
+
+When("I focus on controlled Select input", () => {
+  commonDataElementInputPreview().focus();
+});
+
 When("{string} option on the list is hovered over", (position) => {
   selectOption(positionOfElement(position))
     .should("have.attr", "aria-selected", "true")
@@ -61,7 +70,7 @@ When("{string} option on the list is highlighted", (position) => {
 });
 
 When("I click onto controlled select using {string} key", (key) => {
-  simpleSelect().trigger("keydown", keyCode(key));
+  commonDataElementInputPreview().trigger("keydown", keyCode(key));
 });
 
 When("I click onto default select using {string} key", (key) => {
@@ -93,18 +102,18 @@ When("I select value {string}", (text) => {
 });
 
 When("I type {string} into input", (text) => {
-  simpleSelect().type(text);
+  commonDataElementInputPreview().type(text);
 });
 
 When(
   "Type {string} text into multi select input and select the value",
   (text) => {
-    simpleSelect().type(`${text}{downarrow}{enter}`);
+    commonDataElementInputPreview().type(`${text}{downarrow}{enter}`);
   }
 );
 
 When("I type {string} into default input", (text) => {
-  simpleSelect().type(text);
+  commonDataElementInputPreview().type(text);
 });
 
 When("{string} option on Select list is {string}", (position, text) => {
@@ -200,4 +209,8 @@ Then("{string} Select list is visible at the {word}", (name, position) => {
   selectListPosition(name)
     .should("have.attr", "data-popper-placement", `${position}-start`)
     .and("be.visible");
+});
+
+When("I press Tab onto select text element", () => {
+  selectText().tab();
 });

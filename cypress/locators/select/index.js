@@ -30,3 +30,4 @@ export const boldedAndUnderlinedValue = (text) =>
     .find("tbody > tr:nth-child(1) > td:nth-child(2) > span")
     .contains(text);
 export const selectListPosition = () => cy.get(SELECT_LIST_WRAPPER).parent();
+export const selectText = () => getDataElementByValue(SELECT);
