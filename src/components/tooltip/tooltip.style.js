@@ -85,8 +85,14 @@ const StyledTooltipWrapper = styled.div`
 `;
 
 StyledTooltipWrapper.propTypes = {
-  type: PropTypes.string,
+  position: PropTypes.oneOf(["top", "bottom", "left", "right"]),
   size: PropTypes.oneOf(["medium", "large"]),
+  theme: PropTypes.object,
+  type: PropTypes.string,
+  isPartOfInput: PropTypes.bool,
+  inputSize: PropTypes.oneOf(["small", "medium", "large"]),
+  bgColor: PropTypes.string,
+  fontColor: PropTypes.string,
 };
 
 StyledTooltipWrapper.defaultProps = {

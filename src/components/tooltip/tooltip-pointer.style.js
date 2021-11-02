@@ -70,6 +70,7 @@ StyledTooltipPointer.propTypes = {
   position: PropTypes.oneOf(["bottom", "left", "right", "top"]),
   theme: PropTypes.object,
   type: PropTypes.string,
+  bgColor: PropTypes.string,
 };
 
 export default StyledTooltipPointer;
