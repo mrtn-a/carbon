@@ -15,7 +15,9 @@ const fadeIn = keyframes`
 
 const tooltipColor = (type, theme, bgColor) => {
   if (bgColor) return toColor(theme, bgColor);
-  return type === "error" ? theme.colors.error : theme.colors.black;
+  return type === "error"
+    ? "var(--colorsSemanticNegative500)"
+    : "var(--colorsSemanticNeutral500)";
 };
 
 const tooltipOffset = (position, inputSize, isPartOfInput) => {
@@ -64,9 +66,12 @@ const StyledTooltipWrapper = styled.div`
     max-width: 300px;
     position: relative;
     animation: ${fadeIn} 0.2s linear;
-    z-index: ${theme.zIndex.popover};
+    z-index: ${theme.zIndex
+      .popover}; // TODO (tokens): implement elevation tokens - FE-4437
     text-align: left;
-    color: ${fontColor ? toColor(theme, fontColor) : theme.colors.white};
+    color: ${fontColor
+      ? toColor(theme, fontColor)
+      : "var(--colorsSemanticNegative000)"};
     display: inline-block;
     padding: 8px 12px;
     word-break: break-word;
