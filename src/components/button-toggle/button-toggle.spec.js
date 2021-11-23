@@ -242,9 +242,9 @@ describe("ButtonToggle", () => {
       });
       assertStyleMatch(
         {
-          backgroundColor: "#E6EBED",
-          borderColor: "#E6EBED",
-          color: "rgba(0,0,0,.2)",
+          backgroundColor: "var(--colorsUtilityDisabled500)",
+          borderColor: "var(--colorsActionDisabled500)",
+          color: "var(--colorsActionMinorYin030)",
         },
         wrapper.find("label"),
         { modifier: "&" }

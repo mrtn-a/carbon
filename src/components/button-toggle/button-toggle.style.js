@@ -53,36 +53,34 @@ const StyledButtonToggleLabel = styled.label`
   font-weight: 600;
   cursor: pointer;
 
-  ${({ theme }) => css`
-    border: 1px solid ${theme.colors.border};
-    background-color: ${theme.colors.white};
+  border: 1px solid var(--colorsActionMinor500);
+  background-color: var(--colorsYang100);
+
+  ${StyledIcon} {
+    color: var(--colorsActionMinor500);
+  }
+
+  input:checked ~ && {
+    background-color: var(--colorsActionMinor300);
+    border-color: var(--colorsActionMajor600);
+    color: var(--colorsActionMinor500);
+    cursor: auto;
+  }
+
+  input:focus ~ & {
+    outline: 3px solid var(--colorsSemanticFocus500);
+    z-index: 100;
+  }
+
+  input:not(:checked):not(:disabled) ~ &:hover {
+    background-color: var(--colorsActionMajor600);
+    border-color: var(--colorsActionMajor600);
+    color: var(--colorsYang100);
 
     ${StyledIcon} {
-      color: ${theme.colors.black};
+      color: var(--colorsYang100);
     }
-
-    input:checked ~ && {
-      background-color: ${theme.colors.whiteMix};
-      border-color: ${theme.colors.secondary};
-      color: ${theme.colors.text};
-      cursor: auto;
-    }
-
-    input:focus ~ & {
-      outline: 3px solid ${theme.colors.focus};
-      z-index: 100;
-    }
-
-    input:not(:checked):not(:disabled) ~ &:hover {
-      background-color: ${theme.colors.secondary};
-      border-color: ${theme.colors.secondary};
-      color: ${theme.colors.white};
-
-      ${StyledIcon} {
-        color: ${theme.colors.white};
-      }
-    }
-  `};
+  }
 
   ${({ buttonIcon, buttonIconSize, size }) =>
     buttonIcon &&
@@ -96,16 +94,16 @@ const StyledButtonToggleLabel = styled.label`
       }
     `}
 
-  ${({ disabled, theme }) =>
+  ${({ disabled }) =>
     disabled &&
     css`
       & {
-        background-color: ${theme.disabled.button};
-        border-color: ${theme.disabled.button};
-        color: ${theme.disabled.buttonText};
+        background-color: var(--colorsUtilityDisabled500);
+        border-color: var(--colorsActionDisabled500);
+        color: var(--colorsActionMinorYin030);
 
         ${StyledIcon} {
-          color: ${theme.disabled.buttonText};
+          color: var(--colorsActionMinorYin030);
         }
       }
       cursor: not-allowed;
