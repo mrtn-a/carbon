@@ -133,7 +133,7 @@ const StyledIcon = styled.span`
       ${hasTooltip &&
       `
         :focus {
-          outline: 2px solid ${theme.colors.focus};
+          outline: 2px solid var(--colorsSemanticFocus500);
         }
       `}
 
