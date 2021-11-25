@@ -2,6 +2,19 @@ import * as React from "react";
 import Modal, { ModalProps } from "../modal/modal";
 
 export interface DialogProps extends ModalProps {
+  /** Prop to specify the aria-describedby property of the Dialog component */
+  "aria-describedby"?: string;
+  /**
+   * Prop to specify the aria-label of the Dialog component.
+   * To be used only when the title prop is not defined, and the component is not labelled by any internal element.
+   */
+  "aria-label"?: string;
+  /**
+   * Prop to specify the aria-labeledby property of the Dialog component
+   * To be used when the title prop is a custom React Node,
+   * or the component is labelled by an internal element other than the title.
+   */
+  "aria-labelledby"?: string;
   /* Disables auto focus functionality on child elements */
   disableAutoFocus?: boolean;
   /* Disables the focus trap when the dialog is open */
@@ -22,6 +35,8 @@ export interface DialogProps extends ModalProps {
   subtitle?: string;
   /** Title displayed at top of dialog */
   title?: React.ReactNode;
+  /** The ARIA role to be applied to the Dialog container */
+  role?: string;
 }
 
 declare class Dialog extends Modal<DialogProps> {}
