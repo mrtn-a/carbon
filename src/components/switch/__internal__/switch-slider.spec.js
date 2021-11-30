@@ -9,7 +9,6 @@ import {
 import Loader from "../../loader/loader.component";
 import SwitchSlider from "./switch-slider.component";
 import SwitchSliderPanel from "./switch-slider-panel.style";
-import { baseTheme } from "../../../style/themes";
 
 describe("SwitchSlider", () => {
   describe("base theme", () => {
@@ -65,7 +64,7 @@ describe("SwitchSlider", () => {
       it("applies the correct base styles", () => {
         assertStyleMatch(
           {
-            backgroundColor: baseTheme.switch.on,
+            backgroundColor: "var(--colorsActionMinor500)",
           },
           wrapper
         );
@@ -88,7 +87,7 @@ describe("SwitchSlider", () => {
       it("applies the correct base styles", () => {
         assertStyleMatch(
           {
-            backgroundColor: baseTheme.disabled.background,
+            backgroundColor: "var(--colorsActionDisabled500)",
           },
           wrapper
         );
@@ -107,7 +106,7 @@ describe("SwitchSlider", () => {
       it("applies the correct SwitchSliderPanel styles", () => {
         assertStyleMatch(
           {
-            color: baseTheme.switch.disabledFontColor,
+            color: "var(--colorsYin030)",
           },
           wrapper,
           {
@@ -125,7 +124,7 @@ describe("SwitchSlider", () => {
       it("applies the correct SwitchSliderPanel styles", () => {
         assertStyleMatch(
           {
-            color: baseTheme.colors.white,
+            color: "var(--colorsSemanticNeutralYang100)",
           },
           wrapper,
           {
@@ -187,7 +186,7 @@ describe("SwitchSlider", () => {
         it("applies the correct base styles", () => {
           assertStyleMatch(
             {
-              backgroundColor: theme.switch.off,
+              backgroundColor: "var(--colorsSemanticNeutral200)",
             },
             wrapper
           );
@@ -196,7 +195,7 @@ describe("SwitchSlider", () => {
         it("applies the correct ::before styles", () => {
           assertStyleMatch(
             {
-              backgroundColor: theme.colors.white,
+              backgroundColor: "var(--colorsSemanticNeutralYang100)",
             },
             wrapper,
             { modifier: "::before" }
@@ -210,7 +209,7 @@ describe("SwitchSlider", () => {
         it("applies the correct base styles", () => {
           assertStyleMatch(
             {
-              backgroundColor: theme.switch.on,
+              backgroundColor: "var(--colorsActionMinor500)",
             },
             wrapper
           );
@@ -223,7 +222,7 @@ describe("SwitchSlider", () => {
         it("applies the correct base styles", () => {
           assertStyleMatch(
             {
-              backgroundColor: theme.disabled.background,
+              backgroundColor: "var(--colorsActionDisabled500)",
             },
             wrapper
           );
@@ -232,7 +231,7 @@ describe("SwitchSlider", () => {
         it("applies the correct SwitchSliderPanel styles", () => {
           assertStyleMatch(
             {
-              color: theme.switch.disabledFontColor,
+              color: "var(--colorsYin030)",
             },
             wrapper,
             {
@@ -253,7 +252,7 @@ describe("SwitchSlider", () => {
         it("applies the correct base styles", () => {
           assertStyleMatch(
             {
-              backgroundColor: theme.switch.onDisabled,
+              backgroundColor: "var(--colorsSemanticNeutral200)",
             },
             wrapper
           );
@@ -262,7 +261,7 @@ describe("SwitchSlider", () => {
         it("applies the correct SwitchSliderPanel styles", () => {
           assertStyleMatch(
             {
-              color: theme.colors.white,
+              color: "var(--colorsSemanticNeutralYang100)",
             },
             wrapper,
             {

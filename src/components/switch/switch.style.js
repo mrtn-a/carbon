@@ -18,7 +18,6 @@ const StyledSwitch = styled.div`
     labelSpacing,
     reverse,
     size,
-    theme,
   }) => css`
     ${margin}
     ${FieldLineStyle} {
@@ -37,13 +36,13 @@ const StyledSwitch = styled.div`
 
     ${HiddenCheckableInputStyle}:not([disabled]) {
       &:focus + ${StyledSwitchSlider} {
-        outline: solid 3px ${theme.colors.focus};
+        outline: solid 3px var(--colorsSemanticFocus500);
       }
 
       &:hover + ${StyledSwitchSlider} {
         background-color: ${checked
-          ? theme.switch.onHover
-          : theme.switch.offHover};
+          ? "var(--colorsSemanticNeutral600)"
+          : "var(--colorsUtilityMajor200)"};
       }
     }
 
@@ -118,7 +117,7 @@ const StyledSwitch = styled.div`
         `
           ${FieldHelpStyle} {
             margin-left: 60px;
-            padding-left: ${labelSpacing * theme.spacing}px;
+            padding-left: calc(${labelSpacing} * var(--spacing100));
           }
         `}
       `}
@@ -172,7 +171,7 @@ const StyledSwitch = styled.div`
         `
           ${FieldHelpStyle} {
             margin-left: 78px;
-            padding-left: ${labelSpacing * theme.spacing}px;
+            padding-left: calc(${labelSpacing} * var(--spacing100));
           }
         `}
       `}

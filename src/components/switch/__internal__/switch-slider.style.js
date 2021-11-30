@@ -7,7 +7,7 @@ import StyledValidationIcon from "../../../__internal__/validations/validation-i
 
 const StyledSwitchSlider = styled.span`
   ${({ checked, disabled, size, theme, error, warning, info }) => css`
-    background-color: ${theme.switch.off};
+    background-color: var(--colorsSemanticNeutral200);
     display: flex;
     font-size: 12px;
     font-weight: bold;
@@ -24,21 +24,23 @@ const StyledSwitchSlider = styled.span`
     ${info &&
     !disabled &&
     css`
-      box-shadow: inset 0px 0px 0px 1px ${theme.colors.info};
+      box-shadow: inset 0px 0px 0px 1px var(--colorsSemanticNeutral500);
     `}
     ${warning &&
     !disabled &&
     css`
-      box-shadow: inset 0px 0px 0px 1px ${theme.colors.warning};
+      box-shadow: inset 0px 0px 0px 1px var(--colorsSemanticCaution500);
     `}
       ${error &&
     !disabled &&
     css`
-      box-shadow: inset 0px 0px 0px 2px ${theme.colors.error};
-    `}
+      box-shadow: inset 0px 0px 0px 2px var(--colorsSemanticNegative500);
+    `} {
+      // TODO: shadow-box tokens are not ready yet
+    }
 
     &::before {
-      background-color: ${theme.colors.white};
+      background-color: var(--colorsSemanticNeutralYang100);
       bottom: 4px;
       box-shadow: ${theme.shadows.cards};
       content: "";
@@ -53,7 +55,7 @@ const StyledSwitchSlider = styled.span`
 
     ${checked &&
     `
-      background-color: ${theme.switch.on};
+      background-color: var(--colorsActionMinor500);
 
       &::before {
         transform: translateX(36px);
@@ -62,21 +64,21 @@ const StyledSwitchSlider = styled.span`
 
     ${disabled &&
     css`
-      background-color: ${theme.switch.offDisabled};
+      background-color: var(--colorsActionDisabled500);
 
       &::before {
         opacity: 0.8;
       }
 
       ${SwitchSliderPanel} {
-        color: ${theme.switch.disabledFontColor};
+        color: var(--colorsYin030);
       }
 
       ${checked &&
       `
-        background-color: ${theme.switch.onDisabled};
+        background-color: var(--colorsSemanticNeutral200);
 
-        ${SwitchSliderPanel} { color: ${theme.colors.white}; }
+        ${SwitchSliderPanel} { color: var(--colorsSemanticNeutralYang100); }
       `}
     `}
 

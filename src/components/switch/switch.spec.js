@@ -18,7 +18,6 @@ import {
   testStyledSystemMargin,
 } from "../../__spec_helper__/test-utils";
 import StyledValidationIcon from "../../__internal__/validations/validation-icon.style";
-import { baseTheme } from "../../style/themes";
 import SwitchSliderPanel from "./__internal__/switch-slider-panel.style";
 import SwitchStyle from "./switch.style";
 import Label from "../../__internal__/label";
@@ -28,6 +27,12 @@ import StyledHelp from "../help/help.style";
 
 jest.mock("../../__internal__/utils/helpers/guid");
 guid.mockImplementation(() => "guid-12345");
+
+const statusColor = {
+  warning: "var(--colorsSemanticCaution500)",
+  error: "var(--colorsSemanticNegative500)",
+  info: "var(--colorsSemanticNeutral500)",
+};
 
 const getLabel = (wrapper) => wrapper.find(SwitchSliderPanel).text();
 const wrappingComponent = (props) => (
@@ -462,7 +467,7 @@ describe("Switch", () => {
         const shadowWidth = type === "error" ? 2 : 1;
         assertStyleMatch(
           {
-            boxShadow: `inset 0px 0px 0px ${shadowWidth}px ${baseTheme.colors[type]}`,
+            boxShadow: `inset 0px 0px 0px ${shadowWidth}px ${statusColor[type]}`,
           },
           wrapper.find(StyledSwitchSlider)
         );
@@ -487,7 +492,7 @@ describe("Switch", () => {
           const shadowWidth = type === "error" ? 2 : 1;
           assertStyleMatch(
             {
-              boxShadow: `inset 0px 0px 0px ${shadowWidth}px ${baseTheme.colors[type]}`,
+              boxShadow: `inset 0px 0px 0px ${shadowWidth}px ${statusColor[type]}`,
             },
             wrapper.find(StyledSwitchSlider)
           );
@@ -563,7 +568,7 @@ describe("Switch", () => {
           it("then the correct background should be rendered", () => {
             assertStyleMatch(
               {
-                backgroundColor: theme.switch.offHover,
+                backgroundColor: "var(--colorsUtilityMajor200)",
               },
               wrapper,
               {
@@ -579,7 +584,7 @@ describe("Switch", () => {
           it("then the correct outline should be rendered", () => {
             assertStyleMatch(
               {
-                outline: `solid 3px ${theme.colors.focus}`,
+                outline: "solid 3px var(--colorsSemanticFocus500)",
               },
               wrapper,
               {
