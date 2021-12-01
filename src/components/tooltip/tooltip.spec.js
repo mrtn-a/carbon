@@ -53,7 +53,7 @@ describe("Tooltip", () => {
               maxWidth: "300px",
               zIndex: "2000",
               textAlign: "left",
-              color: "var(--colorsSemanticNegative000)",
+              color: "var(--colorsSemanticNeutralYang100)",
               display: "inline-block",
               padding: "8px 12px",
               wordBreak: "break-word",

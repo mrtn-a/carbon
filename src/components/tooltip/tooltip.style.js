@@ -71,7 +71,7 @@ const StyledTooltipWrapper = styled.div`
     text-align: left;
     color: ${fontColor
       ? toColor(theme, fontColor)
-      : "var(--colorsSemanticNegative000)"};
+      : "var(--colorsSemanticNeutralYang100)"};
     display: inline-block;
     padding: 8px 12px;
     word-break: break-word;
