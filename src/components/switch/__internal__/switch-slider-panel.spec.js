@@ -62,7 +62,7 @@ describe("SwitchSliderPanel", () => {
       it("applies the correct base styles", () => {
         assertStyleMatch(
           {
-            color: theme.colors.white,
+            color: "var(--colorsSemanticNeutralYang100)",
           },
           wrapper
         );
@@ -71,7 +71,7 @@ describe("SwitchSliderPanel", () => {
       it("applies the correct off panel styles", () => {
         assertStyleMatch(
           {
-            color: theme.text.color,
+            color: "var(--colorsYin090)",
           },
           wrapper,
           { modifier: '[type="off"]' }
