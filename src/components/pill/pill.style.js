@@ -30,8 +30,8 @@ const PillStyle = styled.span`
     size,
   }) => {
     const isStatus = pillRole === "status";
-    const { colors, text } = baseTheme;
     const variety = isStatus ? colorVariant : "primary";
+    const tokenTextColor = "colorsUtilityYin090";
     let pillColor;
     let buttonFocusColor;
     let contentColor;
@@ -40,17 +40,20 @@ const PillStyle = styled.span`
       if (borderColor) {
         pillColor = toColor(theme, borderColor);
         buttonFocusColor = shade(0.2, pillColor);
+        contentColor = meetsContrastGuidelines(
+          pillColor,
+          theme.compatibility[tokenTextColor]
+        ).AAA
+          ? `var(--${tokenTextColor})`
+          : "var(--colorsUtilityYang100)";
       } else {
-        const { varietyColor, buttonFocus } = styleConfig(theme)[pillRole][
-          variety
-        ];
+        const { varietyColor, buttonFocus, content } = styleConfig(theme)[
+          pillRole
+        ][variety];
         pillColor = varietyColor;
         buttonFocusColor = buttonFocus;
+        contentColor = content;
       }
-
-      contentColor = meetsContrastGuidelines(pillColor, text.color).AAA
-        ? text.color
-        : colors.white;
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
@@ -69,11 +72,16 @@ const PillStyle = styled.span`
       border: 2px solid ${pillColor};
       height: auto;
       white-space: nowrap;
+      color: ${contentColor};
 
       ${inFill &&
       css`
         background-color: ${pillColor};
-        color: ${contentColor};
+      `}
+
+      ${!inFill &&
+      css`
+        color: var(--colorsUtilityYin090);
       `}
 
       ${size === "S" &&
@@ -119,23 +127,9 @@ const PillStyle = styled.span`
           margin: 0;
           line-height: 16px;
 
-          ${inFill &&
-          css`
-            color: ${contentColor};
-            ${StyledIcon} {
-              color: ${contentColor};
-            }
-          `}
-
-          ${!inFill &&
-          css`
-            background-color: transparent;
-            color: ${text.color};
-          `}
-
           &:focus {
             outline: none;
-            box-shadow: 0 0 0 3px ${colors.focus};
+            box-shadow: 0 0 0 3px var(--colorsSemanticFocus500);
             background-color: ${buttonFocusColor};
             & {
               color: ${contentColor};
@@ -162,12 +156,20 @@ const PillStyle = styled.span`
             padding: 0 4px;
             height: unset;
             width: unset;
+            color: ${contentColor};
 
             &:hover,
             &:focus {
               color: ${contentColor};
             }
           }
+
+          ${!inFill &&
+          css`
+            ${StyledIcon} {
+              color: var(--colorsUtilityYin090);
+            }
+          `}
         }
 
         ${size === "S" &&
