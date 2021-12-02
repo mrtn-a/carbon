@@ -11,14 +11,7 @@ import StyledValidationIcon from "../../__internal__/validations/validation-icon
 import { FieldLineStyle } from "../../__internal__/form-field/form-field.style";
 
 const StyledSwitch = styled.div`
-  ${({
-    checked,
-    fieldHelpInline,
-    labelInline,
-    labelSpacing,
-    reverse,
-    size,
-  }) => css`
+  ${({ checked, fieldHelpInline, labelInline, reverse, size }) => css`
     ${margin}
     ${FieldLineStyle} {
       display: flex;
@@ -114,10 +107,9 @@ const StyledSwitch = styled.div`
         }
 
         ${!fieldHelpInline &&
-        `
+        css`
           ${FieldHelpStyle} {
             margin-left: 60px;
-            padding-left: calc(${labelSpacing} * var(--spacing100));
           }
         `}
       `}
@@ -168,10 +160,9 @@ const StyledSwitch = styled.div`
 
         ${!fieldHelpInline &&
         reverse &&
-        `
+        css`
           ${FieldHelpStyle} {
             margin-left: 78px;
-            padding-left: calc(${labelSpacing} * var(--spacing100));
           }
         `}
       `}

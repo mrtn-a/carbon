@@ -124,6 +124,23 @@ describe("Switch", () => {
   });
 
   describe("base theme", () => {
+    describe("when checked=true", () => {
+      const wrapper = render({ checked: true });
+      it("hover is applied to the element", () => {
+        assertStyleMatch(
+          {
+            backgroundColor: "var(--colorsSemanticNeutral600)",
+          },
+          wrapper,
+          {
+            modifier: css`
+              ${`${HiddenCheckableInputStyle}:not([disabled]):hover + ${StyledSwitchSlider}`}
+            `,
+          }
+        );
+      });
+    });
+
     describe("when reverse=false", () => {
       describe("default", () => {
         const wrapper = render({ reverse: false });
