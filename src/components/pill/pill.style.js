@@ -294,6 +294,9 @@ PillStyle.propTypes = {
   colorVariant: PropTypes.oneOf(["neutral", "negative", "positive", "warning"]),
   isDeletable: PropTypes.func,
   size: PropTypes.oneOf(["S", "M", "L", "XL"]),
+  pillRole: PropTypes.oneOf(["tag", "status"]),
+  borderColor: PropTypes.string,
+  theme: PropTypes.object,
 };
 
 export default PillStyle;
