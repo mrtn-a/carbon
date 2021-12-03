@@ -40,7 +40,6 @@ const SwitchSliderPanel = styled.div`
 SwitchSliderPanel.propTypes = {
   isLoading: PropTypes.bool,
   size: PropTypes.string,
-  theme: PropTypes.object,
 };
 
 export default SwitchSliderPanel;

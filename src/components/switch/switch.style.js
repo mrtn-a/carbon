@@ -176,7 +176,6 @@ StyledSwitch.propTypes = {
   labelInline: PropTypes.bool,
   reverse: PropTypes.bool,
   size: PropTypes.string,
-  theme: PropTypes.object,
 };
 
 StyledSwitch.defaultProps = {
