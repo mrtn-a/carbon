@@ -1,7 +1,6 @@
 import styled, { css } from "styled-components";
 import { StyledButtonToggleLabel } from "../button-toggle/button-toggle.style";
 import ValidationIconStyle from "../../__internal__/validations/validation-icon.style";
-import baseTheme from "../../style/themes/base";
 
 const ButtonToggleGroupStyle = styled.div`
   display: flex;
@@ -36,9 +35,5 @@ const ButtonToggleGroupStyle = styled.div`
     margin-left: 4px;
   }
 `;
-
-ButtonToggleGroupStyle.defaultProps = {
-  theme: baseTheme,
-};
 
 export default ButtonToggleGroupStyle;

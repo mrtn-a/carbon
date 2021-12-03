@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import styled, { css } from "styled-components";
-import baseTheme from "../../style/themes/base";
 import StyledIcon from "../icon/icon.style";
 
 const heightConfig = {
@@ -61,7 +60,7 @@ const StyledButtonToggleLabel = styled.label`
   }
 
   input:checked ~ && {
-    background-color: var(--colorsActionMinor300);
+    background-color: var(--colorsActionMinor200);
     border-color: var(--colorsActionMajor600);
     color: var(--colorsActionMinor500);
     cursor: auto;
@@ -171,14 +170,6 @@ const StyledButtonToggleInput = styled.input`
 
 StyledButtonToggleIcon.propTypes = {
   buttonIconSize: PropTypes.string,
-};
-
-StyledButtonToggleLabel.defaultProps = {
-  theme: baseTheme,
-};
-
-StyledButtonToggleLabel.defaultProps = {
-  theme: baseTheme,
 };
 
 export {

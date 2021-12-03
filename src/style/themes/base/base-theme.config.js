@@ -401,6 +401,8 @@ export default (palette) => {
         colorsActionMajor500: this.colors.primary,
         colorsActionMajor600: this.colors.secondary,
 
+        colorsActionMinor200: this.colors.whiteMix,
+
         colorsActionDisabled500: this.disabled.background,
 
         colorsSemanticFocus500: this.colors.focus,
