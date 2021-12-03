@@ -31,7 +31,6 @@ const PillStyle = styled.span`
   }) => {
     const isStatus = pillRole === "status";
     const variety = isStatus ? colorVariant : "primary";
-    const tokenTextColor = "colorsUtilityYin090";
     let pillColor;
     let buttonFocusColor;
     let contentColor;
@@ -42,9 +41,9 @@ const PillStyle = styled.span`
         buttonFocusColor = shade(0.2, pillColor);
         contentColor = meetsContrastGuidelines(
           pillColor,
-          theme.compatibility[tokenTextColor]
+          theme.compatibility.colorsUtilityYin090
         ).AAA
-          ? `var(--${tokenTextColor})`
+          ? "var(--colorsUtilityYin090)"
           : "var(--colorsUtilityYang100)";
       } else {
         const { varietyColor, buttonFocus, content } = styleConfig(theme)[
