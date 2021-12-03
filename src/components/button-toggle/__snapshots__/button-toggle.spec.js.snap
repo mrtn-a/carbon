@@ -36,7 +36,7 @@ exports[`ButtonToggle General styling renders correctly when grouped 1`] = `
 }
 
 input:checked ~ .c2.c2 {
-  background-color: var(--colorsActionMinor300);
+  background-color: var(--colorsActionMinor200);
   border-color: var(--colorsActionMajor600);
   color: var(--colorsActionMinor500);
   cursor: auto;
@@ -185,7 +185,7 @@ exports[`ButtonToggle when the aegean theme is set renders correct styles 1`] = 
 }
 
 input:checked ~ .c2.c2 {
-  background-color: var(--colorsActionMinor300);
+  background-color: var(--colorsActionMinor200);
   border-color: var(--colorsActionMajor600);
   color: var(--colorsActionMinor500);
   cursor: auto;
@@ -285,7 +285,7 @@ exports[`ButtonToggle when the mint theme is set renders correct styles 1`] = `
 }
 
 input:checked ~ .c2.c2 {
-  background-color: var(--colorsActionMinor300);
+  background-color: var(--colorsActionMinor200);
   border-color: var(--colorsActionMajor600);
   color: var(--colorsActionMinor500);
   cursor: auto;
@@ -385,7 +385,7 @@ exports[`ButtonToggle when the sage (experimental) theme is set renders correct 
 }
 
 input:checked ~ .c2.c2 {
-  background-color: var(--colorsActionMinor300);
+  background-color: var(--colorsActionMinor200);
   border-color: var(--colorsActionMajor600);
   color: var(--colorsActionMinor500);
   cursor: auto;
