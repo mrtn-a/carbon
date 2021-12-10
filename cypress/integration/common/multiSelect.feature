@@ -90,7 +90,7 @@ Feature: Multi Select component
   @positive
   Scenario Outline: Verify options can be accessed by keyboard
     Given I open "Select multiselect" component page "controlled"
-      And I focus select input
+      And I focus on controlled Select input
       And I click onto controlled select using "<key>" key
       And I click onto controlled select using "<key>" key
       And I click onto controlled select using "<key>" key
