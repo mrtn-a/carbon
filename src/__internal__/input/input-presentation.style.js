@@ -34,7 +34,7 @@ const InputPresentationStyle = styled.div`
   ${({ hasFocus }) =>
     hasFocus &&
     css`
-      && {
+      & {
         outline: 3px solid var(--colorsSemanticFocus500);
         z-index: 2;
       }
