@@ -4,6 +4,7 @@ import Tippy from "@tippyjs/react/headless";
 import StyledTooltip from "./tooltip.style";
 import StyledPointer from "./tooltip-pointer.style";
 import tagComponent from "../../__internal__/utils/helpers/tags/tags";
+import { tokensClassName } from "../../style/design-tokens/carbon-scoped-tokens-provider/carbon-scoped-tokens-provider.component";
 
 const TOOLTIP_DELAY = 100;
 
@@ -33,6 +34,7 @@ const Tooltip = React.forwardRef(
 
       return (
         <StyledTooltip
+          className={tokensClassName}
           data-element="tooltip"
           role="tooltip"
           tabIndex="-1"
