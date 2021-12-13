@@ -1,3 +1,33 @@
+## [102.1.0](https://github.com/Sage/carbon/compare/v102.0.1...v102.1.0) (2021-12-13)
+
+
+### Features
+
+* **label:** describe label using design tokens, remove theme in css files ([cc8ea45](https://github.com/Sage/carbon/commit/cc8ea454251824ab2b85c90f948072792a4a91f8))
+
+### [102.0.1](https://github.com/Sage/carbon/compare/v102.0.0...v102.0.1) (2021-12-07)
+
+
+### Bug Fixes
+
+* **button-toggle:** add missing ARIA props ([912c59f](https://github.com/Sage/carbon/commit/912c59f667826fc0404bade4f71d8a8a8f9cf5c5))
+* **button-toggle:** add missing data props ([2d950a5](https://github.com/Sage/carbon/commit/2d950a5c89f1fd8f4fd2f10bb01307fa54e39a6c))
+* **button-toggle:** remove icon margin when content is not defined ([22985cd](https://github.com/Sage/carbon/commit/22985cda656eea520bee42059804c5d8c71375cf))
+
+## [102.0.0](https://github.com/Sage/carbon/compare/v101.4.5...v102.0.0) (2021-12-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* **decimal:** Decimal has been refactored to be a functional component from a class based
+component. This means that you are no longer able to extend this component.
+
+fixes FE-3640
+
+### Code Refactoring
+
+* **decimal:** convert class to functional component ([5eb2d32](https://github.com/Sage/carbon/commit/5eb2d32b31788fa3774d1c7ae5e4834b1bd39e0c))
+
 ### [101.4.5](https://github.com/Sage/carbon/compare/v101.4.4...v101.4.5) (2021-12-06)
 
 
