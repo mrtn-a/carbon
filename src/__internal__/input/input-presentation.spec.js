@@ -53,16 +53,16 @@ describe("InputPresentation", () => {
       ["error", "var(--colorsSemanticNegative500)"],
       ["warning", "var(--colorsSemanticCaution500)"],
       ["info", "var(--colorsSemanticInfo500)"],
-    ])("when %s prop is set to true", (name, validation) => {
+    ])("when %s prop is set to true", (state, token) => {
       it("has the right style", () => {
-        const boxShadow = `inset 1px 1px 0 ${validation},inset -1px -1px 0 ${validation}`;
+        const boxShadow = `inset 1px 1px 0 ${token},inset -1px -1px 0 ${token}`;
 
         assertStyleMatch(
           {
-            borderColor: `${validation} !important`,
-            boxShadow: name === "error" ? boxShadow : undefined,
+            borderColor: `${token} !important`,
+            boxShadow: state === "error" ? boxShadow : undefined,
           },
-          render({ [name]: true }).find(InputPresentationStyle)
+          render({ [state]: true }).find(InputPresentationStyle)
         );
       });
     });
@@ -71,16 +71,16 @@ describe("InputPresentation", () => {
       ["error", "var(--colorsSemanticNegative500)"],
       ["warning", "var(--colorsSemanticCaution500)"],
       ["info", "var(--colorsSemanticInfo500)"],
-    ])("when %s prop is a string", (name, validation) => {
+    ])("when %s prop is a string", (state, token) => {
       it("has the right style", () => {
-        const boxShadow = `inset 1px 1px 0 ${validation},inset -1px -1px 0 ${validation}`;
+        const boxShadow = `inset 1px 1px 0 ${token},inset -1px -1px 0 ${token}`;
 
         assertStyleMatch(
           {
-            borderColor: `${validation} !important`,
-            boxShadow: name === "error" ? boxShadow : undefined,
+            borderColor: `${token} !important`,
+            boxShadow: state === "error" ? boxShadow : undefined,
           },
-          renderWithContext({ [name]: "Message" }).find(InputPresentationStyle)
+          renderWithContext({ [state]: "Message" }).find(InputPresentationStyle)
         );
       });
     });
