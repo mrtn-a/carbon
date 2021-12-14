@@ -1,6 +1,5 @@
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
-import baseTheme from "../../style/themes/base";
 import sizes from "./input-sizes.style";
 
 export const StyledInputPresentationContainer = styled.div`
@@ -86,7 +85,6 @@ function stylingForValidations({ error, warning, info, disabled }) {
 
 InputPresentationStyle.defaultProps = {
   size: "medium",
-  theme: baseTheme,
 };
 
 InputPresentationStyle.propTypes = {

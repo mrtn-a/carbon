@@ -1,6 +1,5 @@
 import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
-import baseTheme from "../../style/themes/base";
 
 const StyledInput = styled.input`
   background: transparent;
@@ -41,10 +40,6 @@ const StyledInput = styled.input`
       color: var(--colorsActionMinorYin090);
     `}
 `;
-
-StyledInput.defaultProps = {
-  theme: baseTheme,
-};
 
 StyledInput.propTypes = {
   disabled: PropTypes.bool,
