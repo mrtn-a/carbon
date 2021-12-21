@@ -4,20 +4,21 @@ import StyledOption from "./option.style";
 
 const Option = React.forwardRef(
   (
-    { text, children, onSelect, value, isHighlighted, hidden, onClick },
+    { text, children, onSelect, value, id, isHighlighted, hidden, onClick },
     ref
   ) => {
     function handleClick() {
       if (!onClick) {
-        onSelect({ text, value });
+        onSelect({ text, value, id });
       } else {
         onSelect();
-        onClick({ target: { text, value } });
+        onClick({ target: { text, value, id } });
       }
     }
 
     return (
       <StyledOption
+        id={id}
         ref={ref}
         aria-selected={isHighlighted}
         data-component="option"
@@ -39,6 +40,12 @@ Option.propTypes = {
   children: PropTypes.node,
   /** The option's invisible internal value */
   value: PropTypes.oneOfType([PropTypes.object, PropTypes.string]).isRequired,
+  /**
+   * @private
+   * @ignore
+   * Component id (prop added by the SelectList component)
+   */
+  id: PropTypes.string.isRequired,
   /**
    * @private
    * @ignore

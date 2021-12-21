@@ -6,8 +6,10 @@ import SelectText from "../__internal__/select-text/select-text.component";
 import guid from "../../../__internal__/utils/helpers/guid/guid";
 
 const SelectTextbox = ({
+  "aria-controls": ariaControls,
   value,
   disabled,
+  isOpen,
   readOnly,
   placeholder,
   labelId,
@@ -20,6 +22,7 @@ const SelectTextbox = ({
   required,
   hasTextCursor,
   transparent,
+  activeDescendantId,
   ...restProps
 }) => {
   const l = useLocale();
@@ -61,9 +64,18 @@ const SelectTextbox = ({
       onFocus: handleTextboxFocus,
       onBlur: handleTextboxBlur,
       labelId,
-      type: hasTextCursor ? "text" : "button",
-      tabIndex: hasTextCursor ? undefined : -1,
+      type: "text",
       ...restProps,
+    };
+  }
+
+  function getInputAriaAttributes() {
+    return {
+      "aria-expanded": isOpen,
+      "aria-labelledby": `${labelId} ${textId.current}`,
+      "aria-activedescendantid": activeDescendantId,
+      "aria-controls": ariaControls,
+      role: "combobox",
     };
   }
 
@@ -90,14 +102,13 @@ const SelectTextbox = ({
 
   return (
     <Textbox
-      aria-haspopup="listbox"
-      aria-labelledby={`${labelId} ${textId.current}`}
       data-element="select-input"
       inputIcon="dropdown"
       autoComplete="off"
       size={size}
       onChange={onChange}
       value={selectedValue}
+      {...getInputAriaAttributes()}
       {...getTextboxProps()}
     >
       {renderSelectText()}
@@ -133,6 +144,12 @@ const formInputPropTypes = {
   labelWidth: PropTypes.number,
   /** Width of an input in percentage. Works only when labelInline is true */
   inputWidth: PropTypes.number,
+  /**
+   * @ignore
+   * @private
+   * If true, the select is open
+   */
+  isOpen: PropTypes.bool,
   /** Size of an input */
   size: PropTypes.oneOf(["small", "medium", "large"]),
   /** Placeholder string to be displayed in input */
@@ -155,6 +172,12 @@ const formInputPropTypes = {
 
 SelectTextbox.propTypes = {
   ...formInputPropTypes,
+  /**
+   * @ignore
+   * @private
+   * Id attribute of the select list
+   */
+  "aria-controls": PropTypes.string,
   /**
    * @private
    * @ignore

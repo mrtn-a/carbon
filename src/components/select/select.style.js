@@ -64,18 +64,10 @@ const StyledSelect = styled.div`
     ${!hasTextCursor &&
     css`
       ${StyledInput} {
-        bottom: 0;
-        height: 0;
-        left: 0;
-        opacity: 0;
-        pointer-events: none;
         position: absolute;
-        width: 100%;
-        ${disabled ||
-        (readOnly &&
-          css`
-            display: none;
-          `)}
+        width: 0;
+        height: 0;
+        opacity: 0;
       }
     `}
   `}

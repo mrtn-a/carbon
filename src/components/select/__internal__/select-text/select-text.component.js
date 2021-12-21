@@ -7,7 +7,6 @@ import { InputContext } from "../../../../__internal__/input-behaviour";
 const SelectText = ({
   disabled,
   formattedValue,
-  labelId,
   onClick,
   onKeyDown,
   onFocus,
@@ -43,8 +42,6 @@ const SelectText = ({
 
   return (
     <StyledSelectText
-      aria-haspopup="listbox"
-      aria-labelledby={labelId}
       data-element="select-text"
       disabled={disabled}
       hasPlaceholder={hasPlaceholder}
@@ -55,8 +52,8 @@ const SelectText = ({
       onKeyDown={onKeyDown}
       onMouseDown={onMouseDown}
       readOnly={readOnly}
-      role="combobox"
-      tabIndex="0"
+      role="button"
+      tabIndex="-1"
       transparent={transparent}
     >
       {formattedValue || placeholderText}
@@ -69,8 +66,6 @@ SelectText.propTypes = {
   disabled: PropTypes.bool,
   /** Value to be displayed */
   formattedValue: PropTypes.string,
-  /** Label id passed from Select component  */
-  labelId: PropTypes.string,
   /** Callback function for when the Select Textbox loses it's focus. */
   onBlur: PropTypes.func,
   /** Callback function for when the component is clicked. */
