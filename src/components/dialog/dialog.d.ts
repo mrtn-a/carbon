@@ -1,5 +1,5 @@
 import * as React from "react";
-import Modal, { ModalProps } from "../modal/modal";
+import { ModalProps } from "../modal/modal";
 
 export interface DialogProps extends ModalProps {
   /** Prop to specify the aria-describedby property of the Dialog component */
@@ -39,6 +39,6 @@ export interface DialogProps extends ModalProps {
   role?: string;
 }
 
-declare class Dialog extends Modal<DialogProps> {}
+declare function Dialog(props: DialogProps): JSX.Element;
 
 export default Dialog;
