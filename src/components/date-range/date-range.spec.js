@@ -1,10 +1,10 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
-import MockDate from "mockdate";
+import { act } from "react-dom/test-utils";
+
 import DateRange from "./date-range.component";
-import Textbox from "../textbox/textbox.component";
-import DateInput, { BaseDateInput } from "../date";
-import DatePicker from "../date/date-picker.component";
+import DateInput from "../date";
+import DatePicker from "../date/__internal__/date-picker";
 import { rootTagTest } from "../../__internal__/utils/helpers/tags/tags-specs";
 import {
   assertStyleMatch,
@@ -14,7 +14,8 @@ import StyledDateRange from "./date-range.style";
 import StyledDateInput from "../date/date.style";
 import Tooltip from "../tooltip";
 
-jest.useFakeTimers();
+const initialValues = ["10/10/2016", "11/11/2016"];
+const updatedValues = ["12/12/2012", "13/12/2012"];
 
 describe("DateRange", () => {
   let wrapper;
@@ -31,7 +32,7 @@ describe("DateRange", () => {
       {
         onChange: customOnChange,
         onBlur: customOnBlur,
-        value: ["2016-10-10", "2016-11-11"],
+        value: initialValues,
         "data-element": "bar",
         "data-role": "baz",
         name: "foo",
@@ -39,23 +40,22 @@ describe("DateRange", () => {
       },
       mount
     );
-    startInput = wrapper.find(BaseDateInput).at(0);
-    endInput = wrapper.find(BaseDateInput).at(1);
+    startInput = wrapper.find(DateInput).at(0);
+    endInput = wrapper.find(DateInput).at(1);
   });
 
   testStyledSystemMargin((props) => (
-    <DateRange value={["2016-10-10", "2016-11-11"]} {...props} />
+    <DateRange value={initialValues} onChange={() => {}} {...props} />
   ));
 
   describe("onChange", () => {
     describe("when the start date changes", () => {
       it("calls the passed in onChange function", () => {
         wrapper
-          .find(BaseDateInput)
+          .find(DateInput)
           .at(0)
           .find("input")
-          .findWhere((n) => n.props().type !== "hidden")
-          .simulate("change", { target: { value: "2016-10-15" } });
+          .simulate("change", { target: { value: "15/10/2016" } });
         expect(customOnChange).toHaveBeenCalledWith({
           target: {
             id: "bar",
@@ -72,11 +72,10 @@ describe("DateRange", () => {
     describe("when the end date changes", () => {
       it("calls the passed in onChange function", () => {
         wrapper
-          .find(BaseDateInput)
+          .find(DateInput)
           .at(1)
           .find("input")
-          .findWhere((n) => n.props().type !== "hidden")
-          .simulate("change", { target: { value: "2016-11-16" } });
+          .simulate("change", { target: { value: "16/11/2016" } });
 
         expect(customOnChange).toHaveBeenCalledWith({
           target: {
@@ -90,71 +89,281 @@ describe("DateRange", () => {
         });
       });
 
-      describe("when no onChange prop is passed in", () => {
-        it("it does not call the passed in onChange function", () => {
-          wrapper.setProps({ onChange: undefined });
-          wrapper
-            .find(BaseDateInput)
-            .at(0)
-            .find("input")
-            .findWhere((n) => n.props().type !== "hidden")
-            .simulate("change", { target: { value: "2016-11-16" } });
-        });
-      });
-
       describe("when no onBlur prop is passed in", () => {
         it("it does not call the passed in onChange function", () => {
           wrapper.setProps({ onBlur: undefined });
           wrapper.find(DateInput).first().props().onBlur();
         });
       });
+
+      it("sets the raw value to null if an invalid date is passed", () => {
+        wrapper
+          .find(DateInput)
+          .at(1)
+          .find("input")
+          .simulate("change", { target: { value: "foo" } });
+
+        expect(customOnChange).toHaveBeenCalledWith({
+          target: {
+            id: "bar",
+            name: "foo",
+            value: [
+              { formattedValue: "10/10/2016", rawValue: "2016-10-10" },
+              { formattedValue: "foo", rawValue: null },
+            ],
+          },
+        });
+      });
     });
 
     describe("when the user interacts with a date input", () => {
-      it("does not fire an onBlur event when the startDate is focused", () => {
-        wrapper.find(DateInput).first().props().onFocus();
-        wrapper.find(DateInput).first().props().onBlur();
+      it("does not fire an onBlur event when focus moves from start to end input", () => {
+        wrapper.find(DateInput).first().find("input").simulate("focus");
+        wrapper.update().find(DateInput).last().find("input").simulate("focus");
         expect(customOnBlur).not.toHaveBeenCalled();
       });
 
-      it("does not fire an onBlur event when the endDate is focused", () => {
-        wrapper.find(DateInput).last().props().onFocus();
-        wrapper.find(DateInput).last().props().onBlur();
+      it("does not fire an onBlur event when focus moves from end to start input", () => {
+        wrapper.find(DateInput).last().find("input").simulate("focus");
+        wrapper
+          .update()
+          .find(DateInput)
+          .first()
+          .find("input")
+          .simulate("focus");
         expect(customOnBlur).not.toHaveBeenCalled();
       });
     });
 
     describe("when the user updates the startDate textbox", () => {
-      it("calls the passed in onBlur function", () => {
+      it("calls the passed in onBlur function with formatted date string and ISO raw value", () => {
+        const updatedValue = "15/10/2016";
+        const updatedISO = "2016-10-15";
         wrapper
-          .find(BaseDateInput)
+          .find(DateInput)
           .at(0)
           .find("input")
-          .findWhere((n) => n.props().type !== "hidden")
-          .simulate("blur", { target: { value: "2016-10-15" } });
-        jest.runAllTimers();
-        expect(customOnBlur).toHaveBeenCalled();
+          .simulate("change", { target: { value: updatedValue } });
+
+        wrapper.find(DateInput).at(0).find("input").simulate("blur");
+
+        expect(customOnBlur).toHaveBeenCalledWith({
+          target: {
+            id: "bar",
+            name: "foo",
+            value: [
+              { formattedValue: updatedValue, rawValue: updatedISO },
+              { formattedValue: "11/11/2016", rawValue: "2016-11-11" },
+            ],
+          },
+        });
+      });
+
+      it("calls the passed in onBlur function with current unformatted input string and null raw value", () => {
+        const updatedValue = "foo";
+        const updatedISO = null;
+        wrapper
+          .find(DateInput)
+          .at(0)
+          .find("input")
+          .simulate("change", { target: { value: updatedValue } });
+
+        wrapper.find(DateInput).at(0).find("input").simulate("blur");
+
+        expect(customOnBlur).toHaveBeenCalledWith({
+          target: {
+            id: "bar",
+            name: "foo",
+            value: [
+              { formattedValue: updatedValue, rawValue: updatedISO },
+              { formattedValue: "11/11/2016", rawValue: "2016-11-11" },
+            ],
+          },
+        });
       });
     });
 
     describe("when the user updates the endDate textbox", () => {
       it("calls the passed in onBlur function", () => {
+        const updatedValue = "15/10/2016";
+        const updatedISO = "2016-10-15";
         wrapper
-          .find(BaseDateInput)
+          .find(DateInput)
           .at(1)
           .find("input")
-          .findWhere((n) => n.props().type !== "hidden")
-          .simulate("blur", { target: { value: "2016-10-15" } });
-        jest.runAllTimers();
-        expect(customOnBlur).toHaveBeenCalled();
+          .simulate("change", { target: { value: updatedValue } });
+
+        wrapper.find(DateInput).at(1).find("input").simulate("blur");
+
+        expect(customOnBlur).toHaveBeenCalledWith({
+          target: {
+            id: "bar",
+            name: "foo",
+            value: [
+              { formattedValue: "10/10/2016", rawValue: "2016-10-10" },
+              { formattedValue: updatedValue, rawValue: updatedISO },
+            ],
+          },
+        });
+      });
+
+      it("calls the passed in onBlur function with current unformatted input string and null raw value", () => {
+        const updatedValue = "foo";
+        const updatedISO = null;
+        wrapper
+          .find(DateInput)
+          .at(1)
+          .find("input")
+          .simulate("change", { target: { value: updatedValue } });
+
+        wrapper.find(DateInput).at(1).find("input").simulate("blur");
+
+        expect(customOnBlur).toHaveBeenCalledWith({
+          target: {
+            id: "bar",
+            name: "foo",
+            value: [
+              { formattedValue: "10/10/2016", rawValue: "2016-10-10" },
+              { formattedValue: updatedValue, rawValue: updatedISO },
+            ],
+          },
+        });
       });
     });
   });
 
+  describe("blocking blur", () => {
+    let container;
+    const tabKey = new KeyboardEvent("keydown", { key: "Tab", which: 9 });
+    const shiftTabKey = new KeyboardEvent("keydown", {
+      key: "Tab",
+      which: 9,
+      shiftKey: true,
+    });
+    const randomKey = new KeyboardEvent("keydown", {
+      which: 32,
+    });
+
+    beforeEach(() => {
+      container = document.createElement("div");
+      container.id = "enzymeContainer";
+      document.body.appendChild(container);
+      customOnChange = jest.fn();
+      customOnBlur = jest.fn();
+
+      wrapper = renderDateRange(
+        {
+          onChange: customOnChange,
+          onBlur: customOnBlur,
+          value: initialValues,
+          "data-element": "bar",
+          "data-role": "baz",
+          name: "foo",
+          id: "bar",
+        },
+        mount
+      );
+      startInput = wrapper.find(DateInput).at(0);
+      endInput = wrapper.find(DateInput).at(1);
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+
+      if (container && container.parentNode) {
+        container.parentNode.removeChild(container);
+      }
+
+      container = null;
+    });
+
+    describe("when the first input is focused", () => {
+      it("prevents the onBlur callback from being called when tab key press detected", () => {
+        act(() => {
+          simulateFocusOnInput(startInput);
+        });
+        wrapper.update();
+        act(() => {
+          startInput.prop("onKeyDown")(tabKey);
+        });
+        wrapper.update();
+        simulateBlurOnInput(startInput);
+
+        expect(customOnBlur).not.toHaveBeenCalled();
+      });
+
+      it("allows the onBlur callback to be called when tab and shift key press detected", () => {
+        act(() => {
+          simulateFocusOnInput(startInput);
+        });
+        wrapper.update();
+        act(() => {
+          startInput.prop("onKeyDown")(shiftTabKey);
+        });
+        wrapper.update();
+        simulateBlurOnInput(startInput);
+
+        expect(customOnBlur).toHaveBeenCalled();
+      });
+
+      it("allows the onBlur callback to be called when random key press detected", () => {
+        act(() => {
+          simulateFocusOnInput(startInput);
+        });
+        wrapper.update();
+        act(() => {
+          startInput.prop("onKeyDown")(randomKey);
+        }); // for coverage
+        wrapper.update();
+        simulateBlurOnInput(startInput);
+
+        expect(customOnBlur).toHaveBeenCalled();
+      });
+    });
+
+    describe("when the last input is focused", () => {
+      it("allows the onBlur callback to be called when tab key press detected", () => {
+        act(() => {
+          simulateFocusOnInput(endInput);
+        });
+        wrapper.update();
+        act(() => {
+          endInput.prop("onKeyDown")(tabKey);
+        });
+        wrapper.update();
+        simulateBlurOnInput(endInput);
+
+        expect(customOnBlur).toHaveBeenCalled();
+      });
+
+      it("prevents the onBlur callback from being called when tab and shift key press detected", () => {
+        act(() => {
+          simulateFocusOnInput(endInput);
+        });
+        wrapper.update();
+        act(() => {
+          endInput.prop("onKeyDown")(shiftTabKey);
+        });
+        wrapper.update();
+        simulateBlurOnInput(endInput);
+
+        expect(customOnBlur).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  function simulateBlurOnInput(container) {
+    const input = container.find("input");
+
+    act(() => {
+      input.simulate("blur");
+    });
+  }
+
   describe("startValue", () => {
     it("sets the value prop on the first input", () => {
       expect(wrapper.find(DateInput).first().prop("value")).toEqual(
-        "2016-10-10"
+        "10/10/2016"
       );
     });
   });
@@ -162,33 +371,34 @@ describe("DateRange", () => {
   describe("endValue", () => {
     it("sets the value prop on the last input", () => {
       expect(wrapper.find(DateInput).last().prop("value")).toEqual(
-        "2016-11-11"
+        "11/11/2016"
       );
     });
   });
 
-  describe("focusStart", () => {
+  describe("focusing the start input", () => {
     it("closes the other datepicker", () => {
       simulateFocusOnInput(wrapper.find(DateInput).last());
       expect(
         wrapper.update().find(DateInput).last().find(DatePicker).exists()
       ).toBeTruthy();
 
-      wrapper.find(DateInput).first().props().onFocus();
+      simulateFocusOnInput(wrapper.find(DateInput).first());
+
       expect(
         wrapper.update().find(DateInput).last().find(DatePicker).exists()
       ).toBeFalsy();
     });
   });
 
-  describe("endDate", () => {
+  describe("focusing the end input", () => {
     it("closes the other datepicker", () => {
       simulateFocusOnInput(wrapper.find(DateInput).first());
       expect(
         wrapper.update().find(DateInput).first().find(DatePicker).exists()
       ).toBeTruthy();
 
-      wrapper.find(DateInput).last().props().onFocus();
+      simulateFocusOnInput(wrapper.find(DateInput).last());
       expect(
         wrapper.update().find(DateInput).first().find(DatePicker).exists()
       ).toBeFalsy();
@@ -207,12 +417,12 @@ describe("DateRange", () => {
         mount
       );
 
-      startInput = wrapper.find(BaseDateInput).at(0);
-      endInput = wrapper.find(BaseDateInput).at(1);
+      startInput = wrapper.find(DateInput).at(0);
+      endInput = wrapper.find(DateInput).at(1);
     });
 
     it("renders 2 date components", () => {
-      expect(wrapper.find(BaseDateInput).length).toEqual(2);
+      expect(wrapper.find(DateInput).length).toEqual(2);
     });
 
     it("renders optional labels inline", () => {
@@ -226,12 +436,12 @@ describe("DateRange", () => {
       wrapper = renderDateRange(
         {
           onChange: customOnChange,
-          value: ["2016-10-10", "2016-11-11"],
+          value: initialValues,
         },
         mount
       );
-      startInput = wrapper.find(BaseDateInput).at(0);
-      endInput = wrapper.find(BaseDateInput).at(1);
+      startInput = wrapper.find(DateInput).at(0);
+      endInput = wrapper.find(DateInput).at(1);
       expect(startInput.props().disabled).toBeUndefined();
       expect(endInput.props().disabled).toBeUndefined();
     });
@@ -242,28 +452,28 @@ describe("DateRange", () => {
           onChange: customOnChange,
           startDateProps: { disabled: true },
           endDateProps: { disabled: true },
-          value: [],
+          value: initialValues,
         },
         mount
       );
-      startInput = wrapper.find(BaseDateInput).at(0);
-      endInput = wrapper.find(BaseDateInput).at(1);
+      startInput = wrapper.find(DateInput).at(0);
+      endInput = wrapper.find(DateInput).at(1);
       expect(startInput.props().disabled).toEqual(true);
       expect(endInput.props().disabled).toEqual(true);
     });
 
-    it("Date values can be set via startDateProps and endDateProps", () => {
+    it("date values can be set via startDateProps and endDateProps", () => {
       wrapper = renderDateRange(
         {
           onChange: customOnChange,
           startDateProps: { value: "2016-10-10" },
           endDateProps: { value: "2016-11-11" },
-          value: [],
+          value: ["", ""],
         },
         mount
       );
-      startInput = wrapper.find(BaseDateInput).at(0);
-      endInput = wrapper.find(BaseDateInput).at(1);
+      startInput = wrapper.find(DateInput).at(0);
+      endInput = wrapper.find(DateInput).at(1);
       expect(startInput.props().value).toEqual("2016-10-10");
       expect(endInput.props().value).toEqual("2016-11-11");
     });
@@ -276,8 +486,8 @@ describe("DateRange", () => {
         },
         mount
       );
-      startInput = wrapper.find(BaseDateInput).at(0);
-      endInput = wrapper.find(BaseDateInput).at(1);
+      startInput = wrapper.find(DateInput).at(0);
+      endInput = wrapper.find(DateInput).at(1);
       expect(startInput.props().value).toEqual("2015-10-10");
       expect(endInput.props().value).toEqual("2015-11-11");
     });
@@ -286,48 +496,47 @@ describe("DateRange", () => {
       wrapper = renderDateRange(
         {
           onChange: customOnChange,
-          startDateProps: { value: "2016-10-10" },
-          endDateProps: { value: "2016-11-11" },
+          startDateProps: { value: initialValues[0] },
+          endDateProps: { value: initialValues[1] },
         },
         mount
       );
-      startInput = wrapper.find(BaseDateInput).at(0);
-      endInput = wrapper.find(BaseDateInput).at(1);
-      expect(startInput.props().value).toEqual("2016-10-10");
-      expect(endInput.props().value).toEqual("2016-11-11");
+      startInput = wrapper.find(DateInput).at(0);
+      endInput = wrapper.find(DateInput).at(1);
+      expect(startInput.props().value).toEqual("10/10/2016");
+      expect(endInput.props().value).toEqual("11/11/2016");
     });
 
     it("supports value update dynamically at runtime", () => {
       wrapper = renderDateRange(
         {
           onChange: customOnChange,
-          value: ["2012-12-12", "2012-12-13"],
+          value: initialValues,
         },
         mount
       );
-      wrapper.setProps({ value: ["2016-10-10", "2016-11-11"] });
+      wrapper.setProps({ value: updatedValues });
       wrapper.update();
-      startInput = wrapper.find(BaseDateInput).at(0);
-      endInput = wrapper.find(BaseDateInput).at(1);
-      expect(startInput.props().value).toEqual("2016-10-10");
-      expect(endInput.props().value).toEqual("2016-11-11");
+      startInput = wrapper.find(DateInput).at(0);
+      endInput = wrapper.find(DateInput).at(1);
+      expect(startInput.props().value).toEqual("12/12/2012");
+      expect(endInput.props().value).toEqual("13/12/2012");
     });
 
-    it("supports value update dynamically at runtime and defaults to today if new value is undefined", () => {
-      MockDate.set("2020-01-21");
+    it("supports value update dynamically at runtime to empty values", () => {
       wrapper = renderDateRange(
         {
           onChange: customOnChange,
-          value: ["2012-12-12", "2012-12-13"],
+          value: initialValues,
         },
         mount
       );
-      wrapper.setProps({ value: [] });
+      wrapper.setProps({ value: ["", ""] });
       wrapper.update();
-      startInput = wrapper.find(BaseDateInput).at(0);
-      endInput = wrapper.find(BaseDateInput).at(1);
-      expect(startInput.props().value).toEqual("2020-01-21");
-      expect(endInput.props().value).toEqual("2020-01-21");
+      startInput = wrapper.find(DateInput).at(0);
+      endInput = wrapper.find(DateInput).at(1);
+      expect(startInput.props().value).toEqual("");
+      expect(endInput.props().value).toEqual("");
     });
 
     it("class names can be added to dates by passing startDateProps and endDateProps to DateRange", () => {
@@ -339,8 +548,8 @@ describe("DateRange", () => {
         },
         mount
       );
-      startInput = wrapper.find(BaseDateInput).at(0);
-      endInput = wrapper.find(BaseDateInput).at(1);
+      startInput = wrapper.find(DateInput).at(0);
+      endInput = wrapper.find(DateInput).at(1);
       expect(startInput.props().className).toEqual("custom-start-class");
       expect(endInput.props().className).toEqual("custom-end-class");
     });
@@ -355,7 +564,7 @@ describe("DateRange", () => {
 
     describe("on internal elements", () => {
       customOnChange = jest.fn();
-      wrapper = renderDateRange({ onChange: customOnChange }, shallow);
+      wrapper = renderDateRange({ onChange: customOnChange }, mount);
 
       it(`include 'data-element="start-date"'`, () => {
         expect(
@@ -372,49 +581,6 @@ describe("DateRange", () => {
   });
 });
 
-describe("DateRange Uncontrolled behaviour", () => {
-  const mockedTodayDate = "2019-04-01";
-
-  beforeAll(() => {
-    MockDate.set(mockedTodayDate);
-  });
-
-  afterAll(() => {
-    MockDate.reset();
-  });
-
-  it("renders the correct default value when defaultValue prop passed", () => {
-    const defaultValue = ["2019-02-01", "2019-02-02"];
-    const wrapper = renderDateRange({ value: undefined, defaultValue }, mount);
-
-    expect(wrapper.find(Textbox).at(0).prop("rawValue")).toBe(defaultValue[0]);
-    expect(wrapper.find(Textbox).at(1).prop("rawValue")).toBe(defaultValue[1]);
-  });
-
-  it("input values of both Date Inputs defaults to today date if none provided", () => {
-    const wrapper = renderDateRange({ value: undefined }, mount);
-    expect(wrapper.find(Textbox).at(0).prop("rawValue")).toBe(mockedTodayDate);
-    expect(wrapper.find(Textbox).at(1).prop("rawValue")).toBe(mockedTodayDate);
-  });
-
-  it("input values of both Date Inputs defaults to empty date if none provided and allowEmptyValue is passed to endDate and startDate", () => {
-    const wrapper = renderDateRange(
-      {
-        value: ["", ""],
-        startDateProps: {
-          allowEmptyValue: true,
-        },
-        endDateProps: {
-          allowEmptyValue: true,
-        },
-      },
-      mount
-    );
-    expect(wrapper.find(Textbox).at(0).prop("rawValue")).toBe("");
-    expect(wrapper.find(Textbox).at(1).prop("rawValue")).toBe("");
-  });
-});
-
 describe("StyledDateRange", () => {
   it("renders Date inputs correctly when the labels are inline", () => {
     const wrapper = mount(
@@ -422,6 +588,7 @@ describe("StyledDateRange", () => {
         <StyledDateInput />
       </StyledDateRange>
     );
+
     assertStyleMatch({ verticalAlign: "top" }, wrapper, {
       modifier: `& ${StyledDateInput}`,
     });
@@ -433,6 +600,7 @@ describe("StyledDateRange", () => {
         <StyledDateInput />
       </StyledDateRange>
     );
+
     assertStyleMatch({ verticalAlign: "bottom" }, wrapper, {
       modifier: `& ${StyledDateInput}`,
     });
@@ -471,14 +639,15 @@ describe("StyledDateRange", () => {
 
 function renderDateRange(props, renderer = shallow) {
   return renderer(
-    <DateRange value={["2016-10-10", "2016-11-11"]} {...props} />
+    <DateRange value={initialValues} onChange={() => {}} {...props} />,
+    {
+      attachTo: document.getElementById("enzymeContainer"),
+    }
   );
 }
 
 function simulateFocusOnInput(container) {
-  const input = container
-    .find("input")
-    .findWhere((n) => n.props().type !== "hidden");
+  const input = container.find("input");
 
   input.simulate("focus");
 }

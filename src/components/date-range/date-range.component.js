@@ -1,27 +1,21 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import styledSystemPropTypes from "@styled-system/prop-types";
-
+import { formatToISO } from "../date/__internal__/utils";
 import DateInput from "../date";
 import { filterStyledSystemMarginProps } from "../../style/utils";
 import tagComponent from "../../__internal__/utils/helpers/tags/tags";
 import StyledDateRange from "./date-range.style";
-import DateHelper from "../../__internal__/date";
-import LocaleContext from "../../__internal__/i18n-context";
+import Events from "../../__internal__/utils/helpers/events";
+import useLocale from "../../hooks/__internal__/useLocale";
+import { localeMap } from "../date/__internal__/locale-map/locale-map";
+import DateRangeContext from "./date-range.context";
 
 const marginPropTypes = filterStyledSystemMarginProps(
   styledSystemPropTypes.space
 );
 
 const DateRange = ({
-  defaultValue,
   endDateProps = {},
   id,
   labelsInline,
@@ -34,81 +28,55 @@ const DateRange = ({
   value,
   ...rest
 }) => {
-  const { locale, date } = useContext(LocaleContext);
-  const format = date.formats.javascript();
-  const formats = date.formats.inputs();
-  const localeData = useMemo(() => ({ locale: locale(), formats, format }), [
-    format,
-    formats,
-    locale,
-  ]);
+  const l = useLocale();
+  const { format } = localeMap[l.locale()];
   const inlineLabelWidth = 40;
-  const today = DateHelper.todayFormatted();
-  const isControlled = value !== undefined;
-  const startDateInputRef = useRef();
-  const endDateInputRef = useRef();
+  const [lastChangedDate, setLastChangedDate] = useState("");
 
-  /** The startDate value */
   const getStartDate = useCallback(() => {
     const { value: startValue } = startDateProps;
-    const computedValue = isControlled ? value : defaultValue;
 
-    return startValue || computedValue ? computedValue[0] : undefined;
-  }, [defaultValue, isControlled, startDateProps, value]);
+    return startValue || value[0];
+  }, [startDateProps, value]);
 
-  /** The endDate value */
   const getEndDate = useCallback(() => {
     const { value: endValue } = endDateProps;
-    const computedValue = isControlled ? value : defaultValue;
 
-    return endValue || computedValue ? computedValue[1] : undefined;
-  }, [defaultValue, isControlled, endDateProps, value]);
+    return endValue || value[1];
+  }, [endDateProps, value]);
+
+  const [inputRefMap, setInputRefMap] = useState({
+    start: {
+      isBlurBlocked: { current: false },
+      setOpen: null,
+    },
+    end: {
+      isBlurBlocked: { current: false },
+      setOpen: null,
+    },
+  });
 
   const [startDateValue, setStartDateValue] = useState({
-    formattedValue: DateHelper.formatDateToCurrentLocale({
-      value: getStartDate(),
-      ...localeData,
-    }),
-    rawValue: DateHelper.formatValue({
-      value: getStartDate() || (!isControlled ? today : ""),
-      ...localeData,
-    }),
+    formattedValue: getStartDate(),
+    rawValue: formatToISO(format, getStartDate()),
   });
 
   const [endDateValue, setEndDateValue] = useState({
-    formattedValue: DateHelper.formatDateToCurrentLocale({
-      value: getEndDate(),
-      ...localeData,
-    }),
-    rawValue: DateHelper.formatValue({
-      value: getEndDate() || (!isControlled ? today : ""),
-      ...localeData,
-    }),
+    formattedValue: getEndDate(),
+    rawValue: formatToISO(format, getEndDate()),
   });
 
   const updateValues = useCallback(() => {
     setStartDateValue({
-      formattedValue: DateHelper.formatDateToCurrentLocale({
-        value: getStartDate(),
-        ...localeData,
-      }),
-      rawValue: DateHelper.formatValue({
-        value: getStartDate() || today,
-        ...localeData,
-      }),
+      formattedValue: getStartDate(),
+      rawValue: formatToISO(format, getStartDate()),
     });
 
     setEndDateValue({
-      formattedValue: DateHelper.formatDateToCurrentLocale({
-        value: getEndDate(),
-        ...localeData,
-      }),
-      rawValue: DateHelper.formatValue({
-        value: getEndDate() || today,
-        ...localeData,
-      }),
+      formattedValue: getEndDate(),
+      rawValue: formatToISO(format, getEndDate()),
     });
-  }, [getEndDate, getStartDate, localeData, today]);
+  }, [getEndDate, getStartDate, format]);
 
   function usePrevious(arg) {
     const ref = useRef();
@@ -123,14 +91,13 @@ const DateRange = ({
   useEffect(() => {
     const hasPreviousValues = previousValue?.length;
     const hasUpdated =
-      isControlled &&
       hasPreviousValues &&
       (value[0] !== previousValue[0] || value[1] !== previousValue[1]);
 
     if (hasUpdated) {
       updateValues();
     }
-  }, [value, previousValue, updateValues, isControlled]);
+  }, [value, previousValue, updateValues]);
 
   const buildCustomEvent = useCallback(
     (changedDate, newValue) => {
@@ -138,6 +105,8 @@ const DateRange = ({
         changedDate === "startDate" && newValue ? newValue : startDateValue;
       const endValue =
         changedDate === "endDate" && newValue ? newValue : endDateValue;
+
+      setLastChangedDate(changedDate);
 
       return {
         target: {
@@ -157,10 +126,8 @@ const DateRange = ({
       setEndDateValue({ ...ev.target.value });
     }
 
-    if (onChange) {
-      const event = buildCustomEvent(changedDate, ev.target.value);
-      onChange(event);
-    }
+    const event = buildCustomEvent(changedDate, ev.target.value);
+    onChange(event);
   };
 
   const startDateOnChange = (ev) => {
@@ -171,67 +138,70 @@ const DateRange = ({
     handleOnChange("endDate", ev);
   };
 
-  const isBlurBlocked = () => {
-    const startBlocked =
-      startDateInputRef?.current?.isBlurBlocked ||
-      startDateInputRef?.current?.inputFocusedViaPicker;
-    const endBlocked =
-      endDateInputRef?.current?.isBlurBlocked ||
-      endDateInputRef?.current?.inputFocusedViaPicker;
-
-    return startBlocked || endBlocked;
+  const updateInputMap = (newState) => {
+    setInputRefMap((prev) => {
+      return {
+        ...prev,
+        ...newState,
+      };
+    });
   };
 
-  const handleOnBlur = () => {
+  const isBlurBlocked = () =>
+    inputRefMap.start.isBlurBlocked.current ||
+    inputRefMap.end.isBlurBlocked.current;
+
+  const handleOnBlur = (ev) => {
     if (isBlurBlocked()) {
       return;
     }
 
     if (onBlur) {
-      const event = buildCustomEvent();
+      const event = buildCustomEvent(lastChangedDate, ev.target.value);
       onBlur(event);
     }
   };
 
-  const blockBlur = (blockId) => {
-    if (blockId === "start") {
-      startDateInputRef.current.isBlurBlocked = true;
-      startDateInputRef.current.inputFocusedViaPicker = true;
-    } else {
-      endDateInputRef.current.isBlurBlocked = true;
-      endDateInputRef.current.inputFocusedViaPicker = true;
+  const closePicker = (activeInput) => {
+    inputRefMap[activeInput].setOpen(false);
+    inputRefMap[activeInput].isBlurBlocked.current = false;
+  };
+
+  const handleOnKeyDown = (ev, activeInput) => {
+    if (Events.isTabKey(ev) && Events.isShiftKey(ev)) {
+      if (activeInput === "start") {
+        inputRefMap.start.isBlurBlocked.current = false;
+      } else {
+        inputRefMap.start.isBlurBlocked.current = true;
+      }
+    } else if (Events.isTabKey(ev)) {
+      if (activeInput === "end") {
+        inputRefMap.end.isBlurBlocked.current = false;
+      } else {
+        inputRefMap.end.isBlurBlocked.current = true;
+      }
     }
-  };
-
-  const focusStart = () => {
-    blockBlur("start");
-
-    endDateInputRef.current.closeDatePicker();
-  };
-
-  const focusEnd = () => {
-    blockBlur("end");
-
-    startDateInputRef.current.closeDatePicker();
   };
 
   const dateProps = (propsKey) => {
     const props = propsKey === "start" ? startDateProps : endDateProps;
 
-    const { rawValue } = propsKey === "start" ? startDateValue : endDateValue;
+    const { formattedValue: inputValue } =
+      propsKey === "start" ? startDateValue : endDateValue;
     const onChangeCallback =
       propsKey === "start" ? startDateOnChange : endDateOnChange;
 
     return {
       label: rest[`${propsKey}Label`],
       labelInline: labelsInline,
-      value: rawValue,
+      value: inputValue,
       error: rest[`${propsKey}Error`],
       warning: rest[`${propsKey}Warning`],
       info: rest[`${propsKey}Info`],
       validationOnLabel,
       onBlur: handleOnBlur,
       onChange: onChangeCallback,
+      onKeyDown: (ev) => handleOnKeyDown(ev, propsKey),
       ...props,
     };
   };
@@ -242,22 +212,24 @@ const DateRange = ({
       labelsInline={labelsInline}
       {...filterStyledSystemMarginProps(rest)}
     >
-      <DateInput
-        {...dateProps("start")}
-        onFocus={focusStart}
-        data-element="start-date"
-        ref={startDateInputRef}
-        labelWidth={inlineLabelWidth} // Textbox only applies this when labelsInLine prop is true
-        tooltipPosition={tooltipPosition}
-      />
-      <DateInput
-        {...dateProps("end")}
-        onFocus={focusEnd}
-        data-element="end-date"
-        ref={endDateInputRef}
-        labelWidth={inlineLabelWidth} // Textbox only applies this when labelsInLine prop is true
-        tooltipPosition={tooltipPosition}
-      />
+      <DateRangeContext.Provider
+        value={{ inputRefMap, setInputRefMap: updateInputMap }}
+      >
+        <DateInput
+          {...dateProps("start")}
+          onFocus={() => closePicker("end")}
+          data-element="start-date"
+          labelWidth={inlineLabelWidth} // Textbox only applies this when labelsInLine prop is true
+          tooltipPosition={tooltipPosition}
+        />
+        <DateInput
+          {...dateProps("end")}
+          onFocus={() => closePicker("start")}
+          data-element="end-date"
+          labelWidth={inlineLabelWidth} // Textbox only applies this when labelsInLine prop is true
+          tooltipPosition={tooltipPosition}
+        />
+      </DateRangeContext.Provider>
     </StyledDateRange>
   );
 };
@@ -270,13 +242,11 @@ DateRange.propTypes = {
    */
   endLabel: PropTypes.string,
   /** Custom callback - receives array of startDate and endDate */
-  onChange: PropTypes.func,
+  onChange: PropTypes.func.isRequired,
   /** Custom callback - receives array of startDate and endDate */
   onBlur: PropTypes.func,
   /** An array containing the value of startDate and endDate */
-  value: PropTypes.arrayOf(PropTypes.string),
-  /* The default value of the input if it's meant to be used as an uncontrolled component */
-  defaultValue: PropTypes.arrayOf(PropTypes.string),
+  value: PropTypes.arrayOf(PropTypes.string).isRequired,
   /** Indicate that error has occurred on start date
   Pass string to display icon, tooltip and red border
   Pass true boolean to only display red border */
@@ -312,11 +282,13 @@ DateRange.propTypes = {
   /** Props for the child start Date component */
   startDateProps: PropTypes.shape({
     ...DateInput.propTypes,
+    onChange: PropTypes.func,
     value: PropTypes.string,
   }),
   /** Props for the child end Date component */
   endDateProps: PropTypes.shape({
     ...DateInput.propTypes,
+    onChange: PropTypes.func,
     value: PropTypes.string,
   }),
   /** An optional string prop to provide a name to the component */
