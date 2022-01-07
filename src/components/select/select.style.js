@@ -47,7 +47,7 @@ const StyledSelect = styled.div`
       ${readOnly &&
       css`
         cursor: ${hasTextCursor ? "text" : "default"};
-      `};
+      `}
     }
 
     ${InputIconToggleStyle} {

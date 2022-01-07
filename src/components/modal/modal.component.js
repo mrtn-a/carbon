@@ -29,10 +29,13 @@ const Modal = ({
   const { blockScroll, allowScroll } = useScrollBlock();
 
   useEffect(() => {
-    if (open && !enableBackgroundUI) {
-      blockScroll();
+    if (enableBackgroundUI) {
+      return;
     }
-    if (!open && !enableBackgroundUI) {
+
+    if (open) {
+      blockScroll();
+    } else {
       allowScroll();
     }
   }, [allowScroll, blockScroll, enableBackgroundUI, open]);
