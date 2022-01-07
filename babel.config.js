@@ -1,5 +1,5 @@
 module.exports = (api) => {
-  const useCJSModules = api.env(["test", "node"]);
+  const useCJSModules = api.env(["test", "cjs"]);
 
   return {
     presets: [

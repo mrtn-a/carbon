@@ -5,7 +5,7 @@ const { promisify } = require("util");
 const exec = promisify(childProcess.exec);
 
 async function run(argv) {
-  const { bundle = "stable", outDir: relativeOutDir = "./lib", verbose } = argv;
+  const { bundle, verbose } = argv;
 
   const env = {
     NODE_ENV: "production",
@@ -20,16 +20,16 @@ async function run(argv) {
     "**/*.test.js",
     "**/*.test.ts",
     "**/*.test.tsx",
+    "**/*.spec.js",
     "**/*.spec.ts",
     "**/*.spec.tsx",
     "**/*.d.ts",
   ];
 
   const outDir = path.resolve(
-    relativeOutDir,
     {
-      node: "./",
-      stable: "./esm",
+      cjs: "./lib",
+      esm: "./esm",
     }[bundle]
   );
 
@@ -66,5 +66,5 @@ async function run(argv) {
   }
 }
 
-run({});
-run({ bundle: "node" });
+run({ bundle: "esm" });
+run({ bundle: "cjs" });

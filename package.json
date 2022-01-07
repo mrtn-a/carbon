@@ -9,6 +9,7 @@
   },
   "files": [
     "lib",
+    "esm",
     "scripts/check_carbon_version.js",
     "scripts/check_rfcs.js"
   ],
@@ -31,7 +32,7 @@
     "build-storybook": "build-storybook -c .storybook -s .assets",
     "start:static": "npx http-server -p 9001 ./storybook-static",
     "babel": "cross-env NODE_ENV=production babel ./src --config-file ./babel.config.js --out-dir ./lib --ignore '**/*/__spec__.js','**/*.spec.js','**/__definition__.js','**/*.test.js' --quiet",
-    "clean-lib": "rimraf ./lib",
+    "clean-lib": "rimraf ./lib && rimraf ./esm",
     "commit": "git-cz",
     "generate-metadata": "node ./scripts/generate_metadata/index.mjs"
   },
@@ -97,7 +98,6 @@
     "commitizen": "^4.2.4",
     "conventional-changelog-conventionalcommits": "^4.5.0",
     "core-js": "^3.1.4",
-    "cpy-cli": "^3.1.1",
     "cross-env": "^5.2.0",
     "cypress": "^9.2.0",
     "cypress-axe": "^0.13.0",

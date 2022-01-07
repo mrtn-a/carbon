@@ -4,7 +4,8 @@ const fse = require("fs-extra");
 const glob = require("fast-glob");
 
 const packagePath = process.cwd();
-const buildPath = path.join(packagePath, "./lib");
+const cjsPath = path.join(packagePath, "./lib");
+const esmPath = path.join(packagePath, "./esm");
 const srcPath = path.join(packagePath, "./src");
 
 async function createModulePackages({ from, to }) {
@@ -16,7 +17,7 @@ async function createModulePackages({ from, to }) {
     directoryPackages.map(async (directoryPackage) => {
       const packageJsonPath = path.join(to, directoryPackage, "package.json");
 
-      const esmDirectoryPath = path.join(to, "/esm", directoryPackage);
+      const esmDirectoryPath = path.join(esmPath, directoryPackage);
       const directoryPath = path.join(to, directoryPackage);
       const relativePath = path.join(
         path.relative(directoryPath, esmDirectoryPath),
@@ -69,10 +70,10 @@ async function copyFiles({ from, to }) {
 
 async function run() {
   try {
-    await copyFiles({ from: srcPath, to: buildPath });
-    await copyFiles({ from: srcPath, to: path.join(buildPath, "/esm") });
+    await copyFiles({ from: srcPath, to: cjsPath });
+    await copyFiles({ from: srcPath, to: esmPath });
 
-    await createModulePackages({ from: srcPath, to: buildPath });
+    await createModulePackages({ from: srcPath, to: cjsPath });
   } catch (err) {
     console.error(err);
     process.exit(1);
