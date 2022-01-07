@@ -2,6 +2,7 @@ import styled, { css } from "styled-components";
 import { baseTheme } from "../../../style/themes";
 import StyledIconButton from "../../icon-button/icon-button.style";
 import Box from "../../box";
+import StyledSearch from "../../search/search.style";
 
 const StyledMenuFullscreen = styled.div`
   position: fixed;
@@ -23,7 +24,30 @@ const StyledMenuFullscreen = styled.div`
     ${menuType === "dark" &&
     css`
       background-color: ${theme.colors.slate};
+
+      ${StyledSearch} span > [data-component="icon"] {
+        color: ${theme.menu.dark.searchIcon};
+
+        &:hover {
+          color: ${theme.menu.dark.searchIconHover};
+        }
+      }
     `}
+
+    ${menuType === "light" &&
+    css`
+      ${StyledSearch} span > [data-component="icon"] {
+        color: ${theme.search.icon};
+
+        &:hover {
+          color: ${theme.search.iconHover};
+        }
+      }
+    `}
+
+    ${StyledSearch} [data-element="search"] {
+      display: inline-flex;
+    }
 
     ${isOpen &&
     css`
