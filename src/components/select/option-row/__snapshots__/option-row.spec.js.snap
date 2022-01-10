@@ -6,7 +6,7 @@ exports[`OptionRow renders properly 1`] = `
 }
 
 .c0:hover {
-  background-color: var(--colorsUtilityMajor025);
+  background-color: var(--colorsUtilityMajor200);
 }
 
 .c0 td {

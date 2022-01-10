@@ -21,7 +21,7 @@ describe("Option", () => {
       const props = { value: "1", text: "foo", isHighlighted: true };
       expect(renderOption(props, mount)).toHaveStyleRule(
         "background-color",
-        "var(--colorsUtilityMajor025)"
+        "var(--colorsUtilityMajor200)"
       );
     });
   });

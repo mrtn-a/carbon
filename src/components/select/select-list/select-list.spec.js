@@ -262,7 +262,7 @@ describe("SelectList", () => {
 
       expect(wrapper.find(optionType).at(1)).toHaveStyleRule(
         "background-color",
-        "var(--colorsUtilityMajor025)"
+        "var(--colorsUtilityMajor200)"
       );
     });
 

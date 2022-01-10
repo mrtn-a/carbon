@@ -12,7 +12,7 @@ const StyledOption = styled.li`
   ${({ isHighlighted }) =>
     isHighlighted &&
     css`
-      background-color: var(--colorsUtilityMajor025);
+      background-color: var(--colorsUtilityMajor200);
     `}
 
   ${({ hidden }) => hidden && "display: none;"}

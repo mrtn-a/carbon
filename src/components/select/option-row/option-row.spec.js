@@ -14,7 +14,7 @@ describe("OptionRow", () => {
       const props = { value: "1", text: "foo", isHighlighted: true };
       expect(renderOptionRow(props, mount)).toHaveStyleRule(
         "background-color",
-        "var(--colorsUtilityMajor025)"
+        "var(--colorsUtilityMajor200)"
       );
     });
   });
@@ -31,7 +31,7 @@ describe("OptionRow", () => {
       const props = { value: "1", text: "foo" };
       expect(renderOptionRow(props, mount)).toHaveStyleRule(
         "background-color",
-        "var(--colorsUtilityMajor025)",
+        "var(--colorsUtilityMajor200)",
         { modifier: ":hover" }
       );
     });
